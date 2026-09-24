@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Goal Plus | Global Football</title>
+
+    <meta
+        name="description"
+        content="Goal Plus — global football scores, fixtures, results, tables and news."
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div class="logo">
+        <span class="logo-ball">⚽</span>
+        <span>GOAL PLUS</span>
+    </div>
+
+    <button
+        class="menu-button"
+        id="menuButton"
+        type="button"
+    >
+        ☰
+    </button>
+
+</header>
+
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <p class="hero-label">
+            THE WORLD OF FOOTBALL
+        </p>
+
+        <h1>
+            Football.<br>
+            Everywhere.
+        </h1>
+
+        <p class="hero-text">
+            Live scores, fixtures, results, tables and football news
+            from competitions around the world.
+        </p>
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search teams, leagues or matches..."
+                autocomplete="off"
+            >
+
+            <button
+                id="searchButton"
+                type="button"
+            >
+                Search
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<nav class="main-nav">
+
+    <button
+        class="nav-item active"
+        data-section="today"
+        type="button"
+    >
+        Today
+    </button>
+
+    <button
+        class="nav-item"
+        data-section="live"
+        type="button"
+    >
+        Live
+    </button>
+
+    <button
+        class="nav-item"
+        data-section="results"
+        type="button"
+    >
+        Results
+    </button>
+
+    <button
+        class="nav-item"
+        data-section="fixtures"
+        type="button"
+    >
+        Fixtures
+    </button>
+
+    <button
+        class="nav-item"
+        data-section="tables"
+        type="button"
+    >
+        Tables
+    </button>
+
+    <button
+        class="nav-item"
+        data-section="news"
+        type="button"
+    >
+        News
+    </button>
+
+</nav>
+
+
+<main>
+
+
+<!-- TODAY -->
+
+<section
+    class="section"
+    id="today"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-kicker">
+                    MATCH CENTRE
+                </p>
+
+                <h2>
+                    Today's Football
+                </h2>
+
+            </div>
+
+            <p class="date-label">
+                Global
+            </p>
+
+        </div>
+
+
+        <div class="empty-state">
+
+            <h3>
+                Today's matches
+            </h3>
+
+            <p>
+                Real football matches will appear here.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- LIVE -->
+
+<section
+    class="section"
+    id="live"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-kicker">
+                    MATCH CENTRE
+                </p>
+
+                <h2>
+                    Live Matches
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div id="liveMatches">
+
+            <div class="empty-state">
+
+                <h3>
+                    No live matches loaded
+                </h3>
+
+                <p>
+                    Live matches will appear here when the football
+                    data connection is active.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- RESULTS -->
+
+<section
+    class="section"
+    id="results"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-kicker">
+                    MATCH CENTRE
+                </p>
+
+                <h2>
+                    Results
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div id="resultsMatches">
+
+            <div class="empty-state">
+
+                <h3>
+                    Results
+                </h3>
+
+                <p>
+                    Recent football results will appear here.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FIXTURES -->
+
+<section
+    class="section"
+    id="fixtures"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-kicker">
+                    MATCH CENTRE
+                </p>
+
+                <h2>
+                    Upcoming Fixtures
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div id="fixtureMatches">
+
+            <div class="empty-state">
+
+                <h3>
+                    Upcoming fixtures
+                </h3>
+
+                <p>
+                    Upcoming football matches will appear here.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- TABLES -->
+
+<section
+    class="section"
+    id="tables"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-kicker">
+                    COMPETITIONS
+                </p>
+
+                <h2>
+                    League Tables
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="empty-state">
+
+            <h3>
+                League tables
+            </h3>
+
+            <p>
+                Choose a competition to view its current table.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- GLOBAL LEAGUES -->
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-kicker">
+                    WORLD FOOTBALL
+                </p>
+
+                <h2>
+                    Global Leagues
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="leagues-grid">
+
+
+            <div class="league-card">
+
+                <span class="league-flag">
+                    🏴
+                </span>
+
+                <strong>
+                    Premier League
+                </strong>
+
+                <span>
+                    England
+                </span>
+
+            </div>
+
+
+            <div class="league-card">
+
+                <span class="league-flag">
+                    🇪🇸
+                </span>
+
+                <strong>
+                    La Liga
+                </strong>
+
+                <span>
+                    Spain
+                </span>
+
+            </div>
+
+
+            <div class="league-card">
+
+                <span class="league-flag">
+                    🇮🇹
+                </span>
+
+                <strong>
+                    Serie A
+                </strong>
+
+                <span>
+                    Italy
+                </span>
+
+            </div>
+
+
+            <div class="league-card">
+
+                <span class="league-flag">
+                    🇩🇪
+                </span>
+
+                <strong>
+                    Bundesliga
+                </strong>
+
+                <span>
+                    Germany
+                </span>
+
+            </div>
+
+
+            <div class="league-card">
+
+                <span class="league-flag">
+                    🇫🇷
+                </span>
+
+                <strong>
+                    Ligue 1
+                </strong>
+
+                <span>
+                    France
+                </span>
+
+            </div>
+
+
+            <div class="league-card">
+
+                <span class="league-flag">
+                    🇧🇷
+                </span>
+
+                <strong>
+                    Brasileirão
+                </strong>
+
+                <span>
+                    Brazil
+                </span>
+
+            </div>
+
+
+            <div class="league-card">
+
+                <span class="league-flag">
+                    🇿🇦
+                </span>
+
+                <strong>
+                    Betway Premiership
+                </strong>
+
+                <span>
+                    South Africa
+                </span>
+
+            </div>
+
+
+            <div class="league-card">
+
+                <span class="league-flag">
+                    🇿🇲
+                </span>
+
+                <strong>
+                    Super League
+                </strong>
+
+                <span>
+                    Zambia
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- NEWS -->
+
+<section
+    class="section"
+    id="news"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="section-kicker">
+                    LATEST
+                </p>
+
+                <h2>
+                    Football News
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="news-grid">
+
+
+            <article class="news-card">
+
+                <span class="news-category">
+                    WORLD
+                </span>
+
+                <h3>
+                    World Football
+                </h3>
+
+                <p>
+                    Follow football stories and competitions
+                    from around the world.
+                </p>
+
+            </article>
+
+
+            <article class="news-card">
+
+                <span class="news-category">
+                    AFRICA
+                </span>
+
+                <h3>
+                    African Football
+                </h3>
+
+                <p>
+                    Follow football across the African continent.
+                </p>
+
+            </article>
+
+
+            <article class="news-card">
+
+                <span class="news-category">
+                    ZAMBIA
+                </span>
+
+                <h3>
+                    Zambian Football
+                </h3>
+
+                <p>
+                    Follow football from Zambia and its competitions.
+                </p>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="container">
+
+        <h3>
+            GOAL PLUS
+        </h3>
+
+        <p>
+            Global football. One place.
+        </p>
+
+        <p>
+            Created by Webby Zulu
+        </p>
+
+        <small>
+            © 2026 Goal Plus. All rights reserved.
+        </small>
+
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
