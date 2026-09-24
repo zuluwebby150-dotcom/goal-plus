@@ -8,21 +8,23 @@ module.exports = async function handler(request, response) {
             });
         }
 
-        const url = new URL(
+        const requestUrl = new URL(
             request.url,
-            "https://goal-plus.vercel.app"
+            "https://goal-plus-sable.vercel.app"
         );
 
         const date =
-            url.searchParams.get("date") ||
+            requestUrl.searchParams.get("date") ||
             new Date().toISOString().slice(0, 10);
 
         const apiResponse = await fetch(
-            "https://v3.football.api-sports.io/fixtures?date=" + date,
+            "https://v3.football.api-sports.io/fixtures?date=" +
+            encodeURIComponent(date),
             {
                 method: "GET",
                 headers: {
-                    "x-apisports-key": apiKey
+                    "x-apisports-key": apiKey,
+                    "Accept": "application/json"
                 }
             }
         );
