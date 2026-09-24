@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Goal Plus | Global Football</title>
+<head>
+
+    <meta charset="UTF-8">
 
     <meta
-        name="description"
-        content="Goal Plus — global football scores, fixtures, results, tables and news."
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
     >
 
-    <link rel="stylesheet" href="style.css">
+    <title>Goal Plus</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
 
+
 <body>
+
 
 <header class="topbar">
 
     <div class="logo">
-        <span class="logo-ball">⚽</span>
-        <span>GOAL PLUS</span>
+        GOAL <span>PLUS</span>
     </div>
 
     <button
-        class="menu-button"
         id="menuButton"
+        class="menu-button"
         type="button"
     >
         ☰
@@ -34,32 +40,37 @@
 </header>
 
 
+
 <section class="hero">
 
     <div class="hero-content">
 
         <p class="hero-label">
-            THE WORLD OF FOOTBALL
+            GLOBAL FOOTBALL
         </p>
+
 
         <h1>
-            Football.<br>
-            Everywhere.
+            Every match.<br>
+            Every league.<br>
+            One place.
         </h1>
 
-        <p class="hero-text">
-            Live scores, fixtures, results, tables and football news
-            from competitions around the world.
+
+        <p>
+            Follow football from around the world
+            with Goal Plus.
         </p>
+
 
         <div class="search-box">
 
             <input
                 type="text"
                 id="searchInput"
-                placeholder="Search teams, leagues or matches..."
-                autocomplete="off"
+                placeholder="Search teams or leagues..."
             >
+
 
             <button
                 id="searchButton"
@@ -75,6 +86,7 @@
 </section>
 
 
+
 <nav class="main-nav">
 
     <button
@@ -85,6 +97,7 @@
         Today
     </button>
 
+
     <button
         class="nav-item"
         data-section="live"
@@ -92,6 +105,7 @@
     >
         Live
     </button>
+
 
     <button
         class="nav-item"
@@ -101,6 +115,7 @@
         Results
     </button>
 
+
     <button
         class="nav-item"
         data-section="fixtures"
@@ -109,6 +124,7 @@
         Fixtures
     </button>
 
+
     <button
         class="nav-item"
         data-section="tables"
@@ -116,6 +132,7 @@
     >
         Tables
     </button>
+
 
     <button
         class="nav-item"
@@ -128,49 +145,39 @@
 </nav>
 
 
+
 <main>
 
 
-<!-- TODAY -->
+
+<!-- ================= TODAY ================= -->
 
 <section
-    class="section"
     id="today"
+    class="section"
 >
 
-    <div class="container">
+    <div class="section-heading">
 
-        <div class="section-heading">
+        <div>
 
-            <div>
+            <h2>
+                Today's Matches
+            </h2>
 
-                <p class="section-kicker">
-                    MATCH CENTRE
-                </p>
-
-                <h2>
-                    Today's Football
-                </h2>
-
-            </div>
-
-            <p class="date-label">
-                Global
+            <p>
+                Live football from around the world
             </p>
 
         </div>
 
+    </div>
+
+
+    <div class="matches-grid">
 
         <div class="empty-state">
-
-            <h3>
-                Today's matches
-            </h3>
-
-            <p>
-                Real football matches will appear here.
-            </p>
-
+            Loading matches...
         </div>
 
     </div>
@@ -178,477 +185,576 @@
 </section>
 
 
-<!-- LIVE -->
+
+<!-- ================= LIVE ================= -->
 
 <section
-    class="section"
     id="live"
->
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <div>
-
-                <p class="section-kicker">
-                    MATCH CENTRE
-                </p>
-
-                <h2>
-                    Live Matches
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <div id="liveMatches">
-
-            <div class="empty-state">
-
-                <h3>
-                    No live matches loaded
-                </h3>
-
-                <p>
-                    Live matches will appear here when the football
-                    data connection is active.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- RESULTS -->
-
-<section
     class="section"
-    id="results"
+    style="display:none;"
 >
 
-    <div class="container">
+    <div class="section-heading">
 
-        <div class="section-heading">
+        <div>
 
-            <div>
-
-                <p class="section-kicker">
-                    MATCH CENTRE
-                </p>
-
-                <h2>
-                    Results
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <div id="resultsMatches">
-
-            <div class="empty-state">
-
-                <h3>
-                    Results
-                </h3>
-
-                <p>
-                    Recent football results will appear here.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- FIXTURES -->
-
-<section
-    class="section"
-    id="fixtures"
->
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <div>
-
-                <p class="section-kicker">
-                    MATCH CENTRE
-                </p>
-
-                <h2>
-                    Upcoming Fixtures
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <div id="fixtureMatches">
-
-            <div class="empty-state">
-
-                <h3>
-                    Upcoming fixtures
-                </h3>
-
-                <p>
-                    Upcoming football matches will appear here.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- TABLES -->
-
-<section
-    class="section"
-    id="tables"
->
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <div>
-
-                <p class="section-kicker">
-                    COMPETITIONS
-                </p>
-
-                <h2>
-                    League Tables
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <div class="empty-state">
-
-            <h3>
-                League tables
-            </h3>
+            <h2>
+                Live Matches
+            </h2>
 
             <p>
-                Choose a competition to view its current table.
+                Matches happening right now
             </p>
 
         </div>
 
     </div>
 
+
+    <div
+        id="liveMatches"
+        class="matches-grid"
+    >
+
+        <div class="empty-state">
+            Loading live matches...
+        </div>
+
+    </div>
+
 </section>
 
 
-<!-- GLOBAL LEAGUES -->
+
+<!-- ================= RESULTS ================= -->
+
+<section
+    id="results"
+    class="section"
+    style="display:none;"
+>
+
+    <div class="section-heading">
+
+        <div>
+
+            <h2>
+                Results
+            </h2>
+
+            <p>
+                Completed matches today
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="resultsMatches"
+        class="matches-grid"
+    >
+
+        <div class="empty-state">
+            Loading results...
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= FIXTURES ================= -->
+
+<section
+    id="fixtures"
+    class="section"
+    style="display:none;"
+>
+
+    <div class="section-heading">
+
+        <div>
+
+            <h2>
+                Fixtures
+            </h2>
+
+            <p>
+                Upcoming matches today
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="fixtureMatches"
+        class="matches-grid"
+    >
+
+        <div class="empty-state">
+            Loading fixtures...
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= TABLES ================= -->
+
+<section
+    id="tables"
+    class="section"
+    style="display:none;"
+>
+
+    <div class="section-heading">
+
+        <div>
+
+            <h2>
+                Tables
+            </h2>
+
+            <p>
+                League standings
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="empty-state">
+
+        Open a league below to view
+        its standings.
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= GLOBAL LEAGUES ================= -->
 
 <section class="section">
 
-    <div class="container">
+    <div class="section-heading">
 
-        <div class="section-heading">
+        <div>
 
-            <div>
+            <h2>
+                Global Leagues
+            </h2>
 
-                <p class="section-kicker">
-                    WORLD FOOTBALL
-                </p>
-
-                <h2>
-                    Global Leagues
-                </h2>
-
-            </div>
+            <p>
+                Explore major football competitions
+            </p>
 
         </div>
 
+    </div>
 
-        <div class="leagues-grid">
 
 
-            <div class="league-card">
+    <div class="leagues-grid">
 
-                <span class="league-flag">
-                    🏴
-                </span>
 
-                <strong>
-                    Premier League
-                </strong>
 
-                <span>
-                    England
-                </span>
+        <!-- PREMIER LEAGUE -->
 
+        <button
+            class="league-card"
+            type="button"
+            data-league-id="39"
+            data-season="2024"
+            data-country="England"
+            data-league-name="Premier League"
+        >
+
+            <div
+                style="
+                    font-size:48px;
+                    margin-bottom:10px;
+                "
+            >
+                🏴
             </div>
 
 
-            <div class="league-card">
+            <h3>
+                Premier League
+            </h3>
 
-                <span class="league-flag">
-                    🇪🇸
-                </span>
 
-                <strong>
-                    La Liga
-                </strong>
+            <p>
+                🏴 England
+            </p>
 
-                <span>
-                    Spain
-                </span>
+        </button>
 
+
+
+        <!-- LA LIGA -->
+
+        <button
+            class="league-card"
+            type="button"
+            data-league-id="140"
+            data-season="2024"
+            data-country="Spain"
+            data-league-name="La Liga"
+        >
+
+            <div
+                style="
+                    font-size:48px;
+                    margin-bottom:10px;
+                "
+            >
+                🇪🇸
             </div>
 
 
-            <div class="league-card">
+            <h3>
+                La Liga
+            </h3>
 
-                <span class="league-flag">
-                    🇮🇹
-                </span>
 
-                <strong>
-                    Serie A
-                </strong>
+            <p>
+                🇪🇸 Spain
+            </p>
 
-                <span>
-                    Italy
-                </span>
+        </button>
 
+
+
+        <!-- SERIE A -->
+
+        <button
+            class="league-card"
+            type="button"
+            data-league-id="135"
+            data-season="2024"
+            data-country="Italy"
+            data-league-name="Serie A"
+        >
+
+            <div
+                style="
+                    font-size:48px;
+                    margin-bottom:10px;
+                "
+            >
+                🇮🇹
             </div>
 
 
-            <div class="league-card">
+            <h3>
+                Serie A
+            </h3>
 
-                <span class="league-flag">
-                    🇩🇪
-                </span>
 
-                <strong>
-                    Bundesliga
-                </strong>
+            <p>
+                🇮🇹 Italy
+            </p>
 
-                <span>
-                    Germany
-                </span>
+        </button>
 
+
+
+        <!-- BUNDESLIGA -->
+
+        <button
+            class="league-card"
+            type="button"
+            data-league-id="78"
+            data-season="2024"
+            data-country="Germany"
+            data-league-name="Bundesliga"
+        >
+
+            <div
+                style="
+                    font-size:48px;
+                    margin-bottom:10px;
+                "
+            >
+                🇩🇪
             </div>
 
 
-            <div class="league-card">
+            <h3>
+                Bundesliga
+            </h3>
 
-                <span class="league-flag">
-                    🇫🇷
-                </span>
 
-                <strong>
-                    Ligue 1
-                </strong>
+            <p>
+                🇩🇪 Germany
+            </p>
 
-                <span>
-                    France
-                </span>
+        </button>
 
+
+
+        <!-- LIGUE 1 -->
+
+        <button
+            class="league-card"
+            type="button"
+            data-league-id="61"
+            data-season="2024"
+            data-country="France"
+            data-league-name="Ligue 1"
+        >
+
+            <div
+                style="
+                    font-size:48px;
+                    margin-bottom:10px;
+                "
+            >
+                🇫🇷
             </div>
 
 
-            <div class="league-card">
+            <h3>
+                Ligue 1
+            </h3>
 
-                <span class="league-flag">
-                    🇧🇷
-                </span>
 
-                <strong>
-                    Brasileirão
-                </strong>
+            <p>
+                🇫🇷 France
+            </p>
 
-                <span>
-                    Brazil
-                </span>
+        </button>
 
+
+
+        <!-- BRASILEIRÃO -->
+
+        <button
+            class="league-card"
+            type="button"
+            data-league-id="71"
+            data-season="2024"
+            data-country="Brazil"
+            data-league-name="Brasileirão"
+        >
+
+            <div
+                style="
+                    font-size:48px;
+                    margin-bottom:10px;
+                "
+            >
+                🇧🇷
             </div>
 
 
-            <div class="league-card">
+            <h3>
+                Brasileirão
+            </h3>
 
-                <span class="league-flag">
-                    🇿🇦
-                </span>
 
-                <strong>
-                    Betway Premiership
-                </strong>
+            <p>
+                🇧🇷 Brazil
+            </p>
 
-                <span>
-                    South Africa
-                </span>
+        </button>
 
+
+
+        <!-- BETWAY PREMIERSHIP -->
+
+        <button
+            class="league-card"
+            type="button"
+            data-league-id="380"
+            data-season="2024"
+            data-country="South Africa"
+            data-league-name="Betway Premiership"
+        >
+
+            <div
+                style="
+                    font-size:48px;
+                    margin-bottom:10px;
+                "
+            >
+                🇿🇦
             </div>
 
 
-            <div class="league-card">
+            <h3>
+                Betway Premiership
+            </h3>
 
-                <span class="league-flag">
-                    🇿🇲
-                </span>
 
-                <strong>
-                    Super League
-                </strong>
+            <p>
+                🇿🇦 South Africa
+            </p>
 
-                <span>
-                    Zambia
-                </span>
+        </button>
 
+
+
+        <!-- ZAMBIA SUPER LEAGUE -->
+
+        <button
+            class="league-card"
+            type="button"
+            data-league-id="496"
+            data-season="2024"
+            data-country="Zambia"
+            data-league-name="Super League"
+        >
+
+            <div
+                style="
+                    font-size:48px;
+                    margin-bottom:10px;
+                "
+            >
+                🇿🇲
             </div>
 
 
-        </div>
+            <h3>
+                Zambia Super League
+            </h3>
+
+
+            <p>
+                🇿🇲 Zambia
+            </p>
+
+        </button>
 
     </div>
 
 </section>
 
 
-<!-- NEWS -->
+
+<!-- ================= NEWS ================= -->
 
 <section
-    class="section"
     id="news"
+    class="section"
+    style="display:none;"
 >
 
-    <div class="container">
+    <div class="section-heading">
 
-        <div class="section-heading">
+        <div>
 
-            <div>
+            <h2>
+                Football News
+            </h2>
 
-                <p class="section-kicker">
-                    LATEST
-                </p>
-
-                <h2>
-                    Football News
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <div class="news-grid">
-
-
-            <article class="news-card">
-
-                <span class="news-category">
-                    WORLD
-                </span>
-
-                <h3>
-                    World Football
-                </h3>
-
-                <p>
-                    Follow football stories and competitions
-                    from around the world.
-                </p>
-
-            </article>
-
-
-            <article class="news-card">
-
-                <span class="news-category">
-                    AFRICA
-                </span>
-
-                <h3>
-                    African Football
-                </h3>
-
-                <p>
-                    Follow football across the African continent.
-                </p>
-
-            </article>
-
-
-            <article class="news-card">
-
-                <span class="news-category">
-                    ZAMBIA
-                </span>
-
-                <h3>
-                    Zambian Football
-                </h3>
-
-                <p>
-                    Follow football from Zambia and its competitions.
-                </p>
-
-            </article>
-
+            <p>
+                Football from around the world
+            </p>
 
         </div>
 
     </div>
 
+
+    <div class="news-grid">
+
+
+        <article class="news-card">
+
+            <h3>
+                World Football
+            </h3>
+
+            <p>
+                Follow major football stories
+                from around the globe.
+            </p>
+
+        </article>
+
+
+
+        <article class="news-card">
+
+            <h3>
+                African Football
+            </h3>
+
+            <p>
+                Follow football across Africa.
+            </p>
+
+        </article>
+
+
+
+        <article class="news-card">
+
+            <h3>
+                Zambian Football
+            </h3>
+
+            <p>
+                Follow football from Zambia.
+            </p>
+
+        </article>
+
+    </div>
+
 </section>
+
 
 
 </main>
 
 
+
+<!-- ================= FOOTER ================= -->
+
 <footer class="footer">
 
-    <div class="container">
-
-        <h3>
-            GOAL PLUS
-        </h3>
-
-        <p>
-            Global football. One place.
-        </p>
-
-        <p>
-            Created by Webby Zulu
-        </p>
-
-        <small>
-            © 2026 Goal Plus. All rights reserved.
-        </small>
-
+    <div class="logo">
+        GOAL <span>PLUS</span>
     </div>
+
+
+    <p>
+        Global football. One place.
+    </p>
+
+
+    <p>
+        Created by Webby Zulu
+    </p>
+
+
+    <p>
+        © 2026 Goal Plus
+    </p>
 
 </footer>
 
 
+
 <script src="script.js"></script>
 
+<script src="leagues.js"></script>
+
+
 </body>
+
 </html>
