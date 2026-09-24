@@ -1,185 +1,124 @@
-/* =========================================
-   GOAL PLUS
-   MAIN JAVASCRIPT
-   ========================================= */
+document.addEventListener("DOMContentLoaded", function () {
 
+    const navItems = document.querySelectorAll(".nav-item");
+    const sections = document.querySelectorAll("main .section[id]");
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
+    const menuButton = document.getElementById("menuButton");
 
-/* =========================================
-   NAVIGATION
-   ========================================= */
+    function showSection(sectionId) {
 
-const navItems = document.querySelectorAll(".nav-item");
-
-navItems.forEach(function (item) {
-
-    item.addEventListener("click", function () {
-
-        navItems.forEach(function (nav) {
-            nav.classList.remove("active");
+        sections.forEach(function (section) {
+            section.style.display =
+                section.id === sectionId ? "block" : "none";
         });
 
-        item.classList.add("active");
+        navItems.forEach(function (button) {
+            if (button.dataset.section === sectionId) {
+                button.classList.add("active");
+            } else {
+                button.classList.remove("active");
+            }
+        });
 
-        console.log(
-            "Selected:",
-            item.textContent.trim()
-        );
-
-    });
-
-});
-
-
-/* =========================================
-   SEARCH
-   ========================================= */
-
-const searchInput =
-    document.getElementById("searchInput");
-
-const searchButton =
-    document.getElementById("searchButton");
-
-const matchCards =
-    document.querySelectorAll(".match-card");
-
-
-function searchMatches() {
-
-    if (!searchInput) {
-        return;
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     }
 
-    const searchText =
-        searchInput.value
-            .toLowerCase()
-            .trim();
+    // Navigation buttons
+    navItems.forEach(function (button) {
 
+        button.addEventListener("click", function () {
 
-    matchCards.forEach(function (card) {
+            const sectionId = this.getAttribute("data-section");
 
-        const cardText =
-            card.textContent
-                .toLowerCase();
+            if (sectionId) {
+                showSection(sectionId);
+            }
 
-
-        if (
-            searchText === "" ||
-            cardText.includes(searchText)
-        ) {
-
-            card.style.display = "grid";
-
-        } else {
-
-            card.style.display = "none";
-
-        }
+        });
 
     });
 
-}
+    // Search
+    function performSearch() {
 
+        const searchText = searchInput.value.toLowerCase().trim();
+        const matchCards = document.querySelectorAll(".match-card");
 
-if (searchInput) {
+        matchCards.forEach(function (card) {
 
-    searchInput.addEventListener(
-        "input",
-        searchMatches
-    );
+            const cardText = card.textContent.toLowerCase();
 
-}
+            if (
+                searchText === "" ||
+                cardText.includes(searchText)
+            ) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
 
+        });
+    }
 
-if (searchButton) {
+    if (searchButton) {
+        searchButton.addEventListener("click", performSearch);
+    }
 
-    searchButton.addEventListener(
-        "click",
-        searchMatches
-    );
+    if (searchInput) {
+        searchInput.addEventListener("keydown", function (event) {
 
-}
+            if (event.key === "Enter") {
+                performSearch();
+            }
 
+        });
+    }
 
-/* =========================================
-   GLOBAL LEAGUES
-   ========================================= */
+    // League cards
+    const leagueCards = document.querySelectorAll(".league-card");
 
-const leagueCards =
-    document.querySelectorAll(".league-card");
+    leagueCards.forEach(function (card) {
 
+        card.addEventListener("click", function () {
 
-leagueCards.forEach(function (card) {
+            const title = card.querySelector("strong");
+            const country = card.querySelector("span");
 
-    card.addEventListener("click", function () {
+            if (title && country) {
+                alert(
+                    title.textContent +
+                    "\n\nCountry: " +
+                    country.textContent
+                );
+            }
 
-        const country =
-            card.querySelector("h3");
+        });
 
-        const league =
-            card.querySelector("p");
+    });
 
+    // Menu button
+    if (menuButton) {
 
-        if (country && league) {
+        menuButton.addEventListener("click", function () {
 
             alert(
-                country.textContent.trim() +
-                " - " +
-                league.textContent.trim() +
-                "\n\nLeague page coming soon."
+                "Goal Plus Menu\n\n" +
+                "Football\n" +
+                "Leagues\n" +
+                "Teams\n" +
+                "News\n" +
+                "Tables"
             );
 
-        }
+        });
 
-    });
+    }
+
+    // Start with Today
+    showSection("today");
 
 });
-
-
-/* =========================================
-   MENU
-   ========================================= */
-
-const menuButton =
-    document.getElementById("menuButton");
-
-
-if (menuButton) {
-
-    menuButton.addEventListener(
-        "click",
-        function () {
-
-            alert(
-                "Goal Plus menu is coming soon."
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================
-   CURRENT YEAR
-   ========================================= */
-
-const yearElement =
-    document.querySelector(".creator");
-
-
-if (yearElement) {
-
-    yearElement.dataset.year =
-        new Date().getFullYear();
-
-}
-
-
-/* =========================================
-   READY
-   ========================================= */
-
-console.log(
-    "Goal Plus is ready."
-);
