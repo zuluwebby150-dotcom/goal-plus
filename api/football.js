@@ -35,30 +35,54 @@ module.exports = async function handler(request, response) {
 
             const data = await apiResponse.json();
 
-            if (!apiResponse.ok) {
-                throw new Error(
-                    data?.message ||
-                    data?.error ||
-                    "Big Balls API error"
-                );
+            return {
+                ok: apiResponse.ok,
+                status: apiResponse.status,
+                data: data
+            };
+        }
+
+        /*
+         * CURRENT LEAGUE STANDINGS
+         */
+        if (action === "standings") {
+            if (!league) {
+                return response.status(400).json({
+                    error: "League is required."
+                });
             }
 
-            return data;
+            const result = await bigBalls(
+                "/v1/standings?sport=football&league=" +
+                encodeURIComponent(league)
+            );
+
+            return response
+                .status(result.status)
+                .json(result.data);
         }
 
         /*
          * LIVE MATCHES
          */
         if (action === "live") {
-            const data = await bigBalls(
+            const result = await bigBalls(
                 "/v1/matches?sport=football&status=live&limit=200"
             );
 
-            const matches = Array.isArray(data.data)
-                ? data.data
-                : [];
+            if (!result.ok) {
+                return response
+                    .status(result.status)
+                    .json(result.data);
+            }
 
-            const normalized = matches.map(normalizeMatch);
+            const matches =
+                Array.isArray(result.data.data)
+                    ? result.data.data
+                    : [];
+
+            const normalized =
+                matches.map(normalizeMatch);
 
             return response.json({
                 response: normalized,
@@ -70,74 +94,72 @@ module.exports = async function handler(request, response) {
          * MATCH EVENTS
          */
         if (fixture) {
-            const data = await bigBalls(
+            const result = await bigBalls(
                 "/v1/matches/" +
                 encodeURIComponent(fixture) +
                 "/events?sport=football"
             );
 
-            return response.json(data);
+            return response
+                .status(result.status)
+                .json(result.data);
         }
 
         /*
-         * STANDINGS
-         */
-        if (action === "standings") {
-            if (!league) {
-                return response.status(400).json({
-                    error: "League is required."
-                });
-            }
-
-            const data = await bigBalls(
-                "/v1/standings?sport=football&league=" +
-                encodeURIComponent(league)
-            );
-
-            return response.json(data);
-        }
-
-        /*
-         * LEAGUES
+         * LEAGUE CATALOGUE
          */
         if (action === "leagues") {
-            const data = await bigBalls(
+            const result = await bigBalls(
                 "/v1/leagues?sport=football"
             );
 
-            return response.json(data);
+            return response
+                .status(result.status)
+                .json(result.data);
         }
 
         /*
-         * TODAY / DATE MATCHES
+         * MATCHES BY DATE
          */
         if (!action) {
-            const data = await bigBalls(
+            const result = await bigBalls(
                 "/v1/matches?sport=football&limit=200"
             );
 
-            const matches = Array.isArray(data.data)
-                ? data.data
-                : [];
+            if (!result.ok) {
+                return response
+                    .status(result.status)
+                    .json(result.data);
+            }
 
-            const normalized = matches
-                .filter(function (match) {
-                    if (!match.kickoff_utc) {
-                        return false;
-                    }
+            const matches =
+                Array.isArray(result.data.data)
+                    ? result.data.data
+                    : [];
 
-                    const localDate =
-                        new Date(match.kickoff_utc)
-                            .toLocaleDateString(
-                                "en-CA",
-                                {
-                                    timeZone: "Africa/Lusaka"
-                                }
-                            );
+            const normalized =
+                matches
+                    .filter(function (match) {
+                        if (!match.kickoff_utc) {
+                            return false;
+                        }
 
-                    return localDate === requestedDate;
-                })
-                .map(normalizeMatch);
+                        const localDate =
+                            new Date(match.kickoff_utc)
+                                .toLocaleDateString(
+                                    "en-CA",
+                                    {
+                                        timeZone:
+                                            "Africa/Lusaka"
+                                    }
+                                );
+
+                        return (
+                            localDate ===
+                            requestedDate
+                        );
+                    })
+                    .map(normalizeMatch);
 
             return response.json({
                 response: normalized,
@@ -157,8 +179,11 @@ module.exports = async function handler(request, response) {
         );
 
         return response.status(500).json({
-            error: "Football data request failed",
-            message: error.message
+            error:
+                "Football data request failed",
+
+            message:
+                error.message
         });
     }
 };
@@ -166,7 +191,7 @@ module.exports = async function handler(request, response) {
 
 /*
  * Convert Big Balls match data
- * into the format Goal Plus already understands.
+ * into Goal Plus format.
  */
 function normalizeMatch(match) {
 
@@ -189,7 +214,8 @@ function normalizeMatch(match) {
             match.clock &&
             typeof match.clock.minute === "number"
         ) {
-            elapsed = match.clock.minute;
+            elapsed =
+                match.clock.minute;
         }
     }
 
@@ -210,12 +236,16 @@ function normalizeMatch(match) {
         longStatus = "Full Time";
     }
 
-    else if (status === "postponed") {
+    else if (
+        status === "postponed"
+    ) {
         shortStatus = "PST";
         longStatus = "Postponed";
     }
 
-    else if (status === "cancelled") {
+    else if (
+        status === "cancelled"
+    ) {
         shortStatus = "CANC";
         longStatus = "Cancelled";
     }
@@ -230,17 +260,24 @@ function normalizeMatch(match) {
         fixture: {
             id: match.id,
 
-            date: match.kickoff_utc,
+            date:
+                match.kickoff_utc,
 
             venue: {
                 name:
-                    match.venue?.name || ""
+                    match.venue?.name ||
+                    ""
             },
 
             status: {
-                long: longStatus,
-                short: shortStatus,
-                elapsed: elapsed
+                long:
+                    longStatus,
+
+                short:
+                    shortStatus,
+
+                elapsed:
+                    elapsed
             }
         },
 
@@ -263,7 +300,8 @@ function normalizeMatch(match) {
         teams: {
             home: {
                 id:
-                    match.home?.id || "",
+                    match.home?.id ||
+                    "",
 
                 name:
                     match.home?.name ||
@@ -277,7 +315,8 @@ function normalizeMatch(match) {
 
             away: {
                 id:
-                    match.away?.id || "",
+                    match.away?.id ||
+                    "",
 
                 name:
                     match.away?.name ||
@@ -291,8 +330,11 @@ function normalizeMatch(match) {
         },
 
         goals: {
-            home: homeScore,
-            away: awayScore
+            home:
+                homeScore,
+
+            away:
+                awayScore
         },
 
         score: {
@@ -302,8 +344,11 @@ function normalizeMatch(match) {
             },
 
             fulltime: {
-                home: homeScore,
-                away: awayScore
+                home:
+                    homeScore,
+
+                away:
+                    awayScore
             },
 
             extratime: {
@@ -324,11 +369,13 @@ function normalizeMatch(match) {
  * Clean logo URLs.
  */
 function cleanLogo(logo) {
+
     if (!logo) {
         return "";
     }
 
-    const value = String(logo);
+    const value =
+        String(logo);
 
     const markdownMatch =
         value.match(
@@ -340,4 +387,4 @@ function cleanLogo(logo) {
     }
 
     return value;
-          }
+        }
