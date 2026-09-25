@@ -1,10 +1,10 @@
 module.exports = async function handler(request, response) {
     try {
-        const key = process.env.BBS_API_KEY;
+        const bbsKey = process.env.BBS_API_KEY;
 
-        if (!key) {
+        if (!bbsKey) {
             return response.status(500).json({
-                error: "BBS_API_KEY is missing"
+                error: "BBS_API_KEY is missing."
             });
         }
 
@@ -15,125 +15,278 @@ module.exports = async function handler(request, response) {
 
         const action = url.searchParams.get("action");
         const league = url.searchParams.get("league");
-        const date = url.searchParams.get("date");
         const fixture = url.searchParams.get("fixture");
+        const requestedDate =
+            url.searchParams.get("date") ||
+            new Date().toLocaleDateString("en-CA", {
+                timeZone: "Africa/Lusaka"
+            });
 
-        async function callAPI(endpoint) {
-            const result = await fetch(
-                "https://api.bigballsdata.com" + endpoint,
+        async function bigBalls(path) {
+            const apiResponse = await fetch(
+                "https://api.bigballsdata.com" + path,
                 {
+                    method: "GET",
                     headers: {
-                        "Authorization": "Bearer " + key,
+                        "Authorization": "Bearer " + bbsKey,
                         "Accept": "application/json"
                     }
                 }
             );
 
-            const data = await result.json();
+            const data = await apiResponse.json();
 
-            return response
-                .status(result.status)
-                .json(data);
+            if (!apiResponse.ok) {
+                return {
+                    __error: true,
+                    status: apiResponse.status,
+                    data: data
+                };
+            }
+
+            return data;
         }
 
-        /* CURRENT STANDINGS */
-        if (action === "standings") {
+        /*
+         * ==========================================
+         * LEAGUE CATALOGUE
+         * ==========================================
+         */
+        if (action === "leagues") {
+            const data = await bigBalls(
+                "/v1/leagues?sport=football"
+            );
 
+            if (data.__error) {
+                return response
+                    .status(data.status)
+                    .json(data.data);
+            }
+
+            return response.json(data);
+        }
+
+        /*
+         * ==========================================
+         * STANDINGS
+         * ==========================================
+         *
+         * Big Balls:
+         * /v1/standings?sport=football&league=epl
+         *
+         * The provider returns:
+         * {
+         *   data: [...]
+         * }
+         *
+         * Goal Plus converts that into:
+         * {
+         *   response: [...]
+         * }
+         */
+        if (action === "standings") {
             if (!league) {
                 return response.status(400).json({
-                    error: "Missing league code"
+                    error: "League is required."
                 });
             }
 
-            return callAPI(
+            const standings = await bigBalls(
                 "/v1/standings?sport=football&league=" +
                 encodeURIComponent(league)
             );
+
+            if (standings.__error) {
+                return response
+                    .status(standings.status)
+                    .json({
+                        error:
+                            standings.data?.error ||
+                            "Standings request failed.",
+
+                        details:
+                            standings.data
+                    });
+            }
+
+            const rows =
+                Array.isArray(standings.data)
+                    ? standings.data
+                    : [];
+
+            return response.json({
+                response: rows,
+                results: rows.length,
+                meta: standings.meta || null
+            });
         }
 
-        /* LEAGUE LIST */
-        if (action === "leagues") {
-            return callAPI(
-                "/v1/leagues?sport=football"
+        /*
+         * ==========================================
+         * TOP SCORERS
+         * ==========================================
+         *
+         * Big Balls uses hyphenated codes for
+         * some league leaderboard routes:
+         *
+         * serie-a
+         * ligue-1
+         *
+         * EPL, La Liga and Bundesliga work with
+         * their normal codes.
+         */
+        if (action === "scorers") {
+            if (!league) {
+                return response.status(400).json({
+                    error: "League is required."
+                });
+            }
+
+            let scorerLeague = league;
+
+            if (league === "seriea") {
+                scorerLeague = "serie-a";
+            }
+
+            if (league === "ligue1") {
+                scorerLeague = "ligue-1";
+            }
+
+            const scorers = await bigBalls(
+                "/v1/leagues/" +
+                encodeURIComponent(scorerLeague) +
+                "/top-scorers"
             );
+
+            if (scorers.__error) {
+                return response
+                    .status(scorers.status)
+                    .json({
+                        error:
+                            scorers.data?.error ||
+                            "Top scorers request failed.",
+
+                        details:
+                            scorers.data
+                    });
+            }
+
+            const rows =
+                Array.isArray(scorers.data)
+                    ? scorers.data
+                    : [];
+
+            return response.json({
+                response: rows,
+                results: rows.length,
+                meta: scorers.meta || null
+            });
         }
 
-        /* LIVE MATCHES */
-        if (action === "live") {
-            return callAPI(
-                "/v1/matches?sport=football&status=live&limit=200"
-            );
-        }
-
-        /* MATCH EVENTS */
+        /*
+         * ==========================================
+         * MATCH EVENTS
+         * ==========================================
+         */
         if (fixture) {
-            return callAPI(
+            const events = await bigBalls(
                 "/v1/matches/" +
                 encodeURIComponent(fixture) +
                 "/events?sport=football"
             );
-        }
 
-        /* MATCHES BY DATE */
-        if (!action) {
-
-            const result = await fetch(
-                "https://api.bigballsdata.com/v1/matches?sport=football&limit=200",
-                {
-                    headers: {
-                        "Authorization": "Bearer " + key,
-                        "Accept": "application/json"
-                    }
-                }
-            );
-
-            const data = await result.json();
-
-            if (!Array.isArray(data.data)) {
+            if (events.__error) {
                 return response
-                    .status(result.status)
-                    .json(data);
+                    .status(events.status)
+                    .json(events.data);
             }
 
-            const requestedDate =
-                date ||
-                new Date()
-                    .toISOString()
-                    .slice(0, 10);
+            return response.json(events);
+        }
+
+        /*
+         * ==========================================
+         * LIVE MATCHES
+         * ==========================================
+         */
+        if (action === "live") {
+            const live = await bigBalls(
+                "/v1/matches?sport=football&status=live&limit=200"
+            );
+
+            if (live.__error) {
+                return response
+                    .status(live.status)
+                    .json(live.data);
+            }
 
             const matches =
-                data.data.filter(function(match) {
+                Array.isArray(live.data)
+                    ? live.data
+                    : [];
 
+            const normalized =
+                matches.map(normalizeMatch);
+
+            return response.json({
+                response: normalized,
+                results: normalized.length,
+                meta: live.meta || null
+            });
+        }
+
+        /*
+         * ==========================================
+         * MATCHES BY DATE
+         * ==========================================
+         */
+        const data = await bigBalls(
+            "/v1/matches?sport=football&limit=200"
+        );
+
+        if (data.__error) {
+            return response
+                .status(data.status)
+                .json(data.data);
+        }
+
+        const matches =
+            Array.isArray(data.data)
+                ? data.data
+                : [];
+
+        const normalized =
+            matches
+                .filter(function (match) {
                     if (!match.kickoff_utc) {
                         return false;
                     }
 
                     const localDate =
-                        new Date(match.kickoff_utc)
-                            .toLocaleDateString(
-                                "en-CA",
-                                {
-                                    timeZone:
-                                        "Africa/Lusaka"
-                                }
-                            );
+                        new Date(
+                            match.kickoff_utc
+                        ).toLocaleDateString(
+                            "en-CA",
+                            {
+                                timeZone:
+                                    "Africa/Lusaka"
+                            }
+                        );
 
-                    return localDate === requestedDate;
-                });
-
-            return response.json({
-                response: matches.map(normalizeMatch),
-                results: matches.length
-            });
-        }
+                    return (
+                        localDate ===
+                        requestedDate
+                    );
+                })
+                .map(normalizeMatch);
 
         return response.json({
-            response: [],
-            results: 0
+            response: normalized,
+            results: normalized.length,
+            meta: data.meta || null
         });
 
     } catch (error) {
-
         console.error(
             "Goal Plus API error:",
             error
@@ -141,7 +294,8 @@ module.exports = async function handler(request, response) {
 
         return response.status(500).json({
             error:
-                "Football data request failed",
+                "Football data request failed.",
+
             message:
                 error.message
         });
@@ -149,26 +303,33 @@ module.exports = async function handler(request, response) {
 };
 
 
+/*
+ * ==========================================
+ * NORMALIZE BIG BALLS MATCH
+ * ==========================================
+ */
 function normalizeMatch(match) {
+
+    const status =
+        String(
+            match.status || "scheduled"
+        ).toLowerCase();
 
     let shortStatus = "NS";
     let longStatus = "Not Started";
     let elapsed = null;
 
-    const status =
-        String(match.status || "")
-            .toLowerCase();
-
     if (
         status === "live" ||
         status === "in_progress"
     ) {
-        shortStatus = "LIVE";
+        shortStatus = "2H";
         longStatus = "Match Live";
 
         if (
             match.clock &&
-            typeof match.clock.minute === "number"
+            typeof match.clock.minute ===
+                "number"
         ) {
             elapsed =
                 match.clock.minute;
@@ -176,8 +337,7 @@ function normalizeMatch(match) {
     }
 
     else if (
-        status === "halftime" ||
-        status === "half_time"
+        status === "halftime"
     ) {
         shortStatus = "HT";
         longStatus = "Half Time";
@@ -185,30 +345,50 @@ function normalizeMatch(match) {
 
     else if (
         status === "final" ||
-        status === "completed" ||
-        status === "finished"
+        status === "completed"
     ) {
         shortStatus = "FT";
         longStatus = "Full Time";
     }
 
-    else if (status === "postponed") {
+    else if (
+        status === "postponed"
+    ) {
         shortStatus = "PST";
         longStatus = "Postponed";
     }
 
+    const homeScore =
+        match.score?.home ??
+        null;
+
+    const awayScore =
+        match.score?.away ??
+        null;
+
     return {
         fixture: {
-            id: match.id,
-            date: match.kickoff_utc,
+            id:
+                match.id,
+
+            date:
+                match.kickoff_utc,
+
             venue: {
                 name:
-                    match.venue?.name || ""
+                    match.venue?.name ||
+                    ""
             },
+
             status: {
-                long: longStatus,
-                short: shortStatus,
-                elapsed: elapsed
+                long:
+                    longStatus,
+
+                short:
+                    shortStatus,
+
+                elapsed:
+                    elapsed
             }
         },
 
@@ -231,37 +411,41 @@ function normalizeMatch(match) {
         teams: {
             home: {
                 id:
-                    match.home?.id || "",
+                    match.home?.id ||
+                    "",
 
                 name:
                     match.home?.name ||
                     "Home",
 
                 logo:
-                    match.home?.logo_url ||
-                    ""
+                    cleanLogo(
+                        match.home?.logo_url
+                    )
             },
 
             away: {
                 id:
-                    match.away?.id || "",
+                    match.away?.id ||
+                    "",
 
                 name:
                     match.away?.name ||
                     "Away",
 
                 logo:
-                    match.away?.logo_url ||
-                    ""
+                    cleanLogo(
+                        match.away?.logo_url
+                    )
             }
         },
 
         goals: {
             home:
-                match.score?.home ?? null,
+                homeScore,
 
             away:
-                match.score?.away ?? null
+                awayScore
         },
 
         score: {
@@ -272,10 +456,10 @@ function normalizeMatch(match) {
 
             fulltime: {
                 home:
-                    match.score?.home ?? null,
+                    homeScore,
 
                 away:
-                    match.score?.away ?? null
+                    awayScore
             },
 
             extratime: {
@@ -289,4 +473,30 @@ function normalizeMatch(match) {
             }
         }
     };
-                    }
+}
+
+
+/*
+ * ==========================================
+ * CLEAN LOGO URL
+ * ==========================================
+ */
+function cleanLogo(logo) {
+    if (!logo) {
+        return "";
+    }
+
+    const value =
+        String(logo);
+
+    const markdownMatch =
+        value.match(
+            /\((https?:\/\/[^)]+)\)/
+        );
+
+    if (markdownMatch) {
+        return markdownMatch[1];
+    }
+
+    return value;
+                }
